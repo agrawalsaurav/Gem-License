@@ -2,19 +2,26 @@
 Simple program to find licenses using the Rubygems.org API given the name of a Ruby gem.
 
 Basic program requirements:
-You MUST have JVM to run the following program on windows platform.
+You MUST have JVM to run the following program.
 
-Compile and run the provided Java files from the command line. An example for running the program is given below.
 
-Ex:
-"$java GemLicenseDriver easycluster"
+Download the zip file then follow the directions below.
+-----------------------------------------------------------------------------------
+Directions for running program using class file: 
 
-*easycluster is an example gem name, replace with any gem name.
+  Open up command line and navigate to directory containing GemLicenseDriver.class
+  Run the following command:
+  
+  $java GemLicenseDriver [Gem Name]
 
------------------------------------------------------------------------------------------------------------------
-A runnable JAR file is also provided for convenience. You may download the JAR and run from command line with the name of the runnable JAR file and an argument.
+-------------------------------------------------------------------------------------
+Directions for running program using the runnable JAR file:
 
-Ex:
-"$GemLicenseDriver1.2 coulda"
+  Open up command line and navigate to directory containing GemLicenseDriver1.2.jar
+  Run the following command:
+  
+  $GemLicenseDriver1.2.jar [Gem Name]
 
-*coulda is an example gem name, replace with any gem name.
+--------------------------------------------------------------------------------------
+
+Please note that the results will be appended to an "output.txt" file
