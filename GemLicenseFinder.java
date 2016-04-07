@@ -20,11 +20,11 @@ import java.util.Set;
  * 
  * 
  * @author Saurav Agrawal
- * @version 1.3
+ * @version 1.4
  * @since 2016-03-30
  */
 
-public class GemLicenseFinder {
+public class GemLicenseFinder implements Search{
 	final String VERSION_BASE_URL = "https://rubygems.org/api/v1/versions/";
 	final String SEARCH_BASE_URL = "https://rubygems.org/api/v1/search.json?query=";
 	final String FORMAT_TYPE = ".json";
@@ -34,18 +34,63 @@ public class GemLicenseFinder {
 	final String NULL_KEYWORD_FORMAT = '"' + KEYWORD_TARGET + '"' + " : N/A";
 	final String NULL_LICENSE_CHECK = "null";
 	final String PRINT_SEPERATOR = "--------------------------";
+	
+	private String searchParam;
+	private List<String> resultSet;
+	
+	//Initialize GemLicenseFinder object with String searchParameter and new List<String> resultSet
+	public GemLicenseFinder (String searchParameter) {
+		searchParam = searchParameter;
+		resultSet = new ArrayList<String>();
+	}
+	
+	//Initialize GemLicenseFinder object with String searchParameter and List<String> resultSet
+	public GemLicenseFinder (String searchParameter, List<String> resultSet) {
+		searchParam = searchParameter;
+		this.resultSet = resultSet; 
+	}
+	
+	/**
+	 * @return List<String> resultSet
+	 */
+	public List<String> getResultSet() {
+		return resultSet;
+	}
+	
+	/**
+	 * @param List<String> resultSet
+	 */
+	public void setResultSet(List<String> resultSet) {
+		this.resultSet = resultSet;
+	}
+	
+	/**
+	 * @param String searchParameter
+	 */
+	@Override
+	public void setSearchParam(String searchParameter) {
+		searchParam = 	searchParameter;	
+	}
+	
+	/**
+	 * @return List<String> resultSet
+	 */
+	@Override
+	public String getSearchParam() {
+		return searchParam;
+	}
+	
 
 	/**
 	 * Checks if Gem is valid by searching RubyGems.org API for active gems
 	 * 
-	 * @param gemName
 	 * @return true if gem is active
 	 * 
 	 */
-	public boolean isGem(String gemName) {
+	public boolean isValid() {
 
 		URL url = null;
-		String finalUrl = SEARCH_BASE_URL + gemName;
+		String finalUrl = SEARCH_BASE_URL + searchParam;
 		try {
 			url = new URL(finalUrl);
 		} catch (MalformedURLException e) {
@@ -60,7 +105,7 @@ public class GemLicenseFinder {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (result.contains(gemName)) {
+		if (result.contains(searchParam)) {
 			return true;
 		} else {
 			return false;
@@ -71,12 +116,11 @@ public class GemLicenseFinder {
 	 * Queries RubyGems.org API for version information on gem. Parses through
 	 * result set to identify License data.
 	 * 
-	 * @param gemName
 	 * @return List of license(s) based on gemName
 	 */
-	public List<String> allLicenses(String gemName) {
-		List<String> resultSet = new ArrayList<String>();
-		String finalUrl = VERSION_BASE_URL + gemName + FORMAT_TYPE;
+	public void getLicenses() {
+		//List<String> resultSet = new ArrayList<String>();
+		String finalUrl = VERSION_BASE_URL + this.searchParam + FORMAT_TYPE;
 		// Form URL using name of gem
 		URL url = null;
 		try {
@@ -107,16 +151,12 @@ public class GemLicenseFinder {
 				}
 			}
 		}
-		return resultSet;
-	}
+	}	
 
 	/**
 	 * Format and print (append) License information to file with time stamp.
-	 * 
-	 * @param gemName
-	 * @param licenses
 	 */
-	public void PrintLicenses(String gemName, List<String> licenses) {
+	public void printResults() {
 		BufferedWriter writer = null;
 		Date currentDateTime = new Date();
 		String timeStamp = currentDateTime.toString();
@@ -125,9 +165,9 @@ public class GemLicenseFinder {
 			writer = new BufferedWriter(new FileWriter(output, true));
 			writer.write(timeStamp);
 			writer.newLine();
-			writer.write("Ruby Gem: " + gemName);
+			writer.write("Ruby Gem: " + searchParam);
 			writer.newLine();
-			for (String str : licenses) {
+			for (String str : resultSet) {
 				writer.write(str);
 			}
 			writer.newLine();
@@ -144,4 +184,5 @@ public class GemLicenseFinder {
 			}
 		}
 	}
+
 }
